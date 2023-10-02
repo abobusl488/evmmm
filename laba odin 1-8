@@ -1,0 +1,171 @@
+%macro innit 1
+	mov byte[%1],0
+%endmacro
+
+%macro z_4 1
+	mov si,0
+	call %1
+%endmacro
+
+%macro z_5 2
+	mov si,0
+	mov bx, %2
+	call %1
+%endmacro
+
+%macro z_6 2
+	mov si,0
+	mov bx, %2
+	call %1
+%endmacro
+
+%macro z_7 2
+	mov si,0
+	mov bx, %2
+	call %1
+%endmacro
+
+%macro z_8 3
+	mov si,0
+	mov bx, %2
+	mov cx, %3
+	call %1
+%endmacro
+;===[ Начало сегмента кода ]============================================
+MYCODE: segment .code
+
+
+
+org 100h	; Обязательная директива ТОЛЬКО для COM-файлов
+START:
+;---[ Точка старта ]---------------------------------------------------------------------
+call stroka
+;call f4
+;z_4 f4
+;z_5 f5,56
+;z_6 f6,55
+;z_7 f7, 55
+z_8 f8, 55, 30	;---[ Сотрите этот комментарий. Здесь будет тело программы. Команды надо писать с 1 табуляцией слева.
+
+	
+
+
+
+
+;---[ Стандартное завершение программы - НЕ СТИРАТЬ НИКОГДА !!! ]------------------------
+	mov AX, 4C00h
+	int 21h
+stroka:
+	mov cx,31
+	mov si,0
+m0:
+	mov byte[si], '#'
+	inc si
+	loop m0
+	mov byte[si],0
+ret
+
+f4:
+	mov bx,0
+	m1:
+	mov ah, byte[si]
+	cmp ah,0
+	jz m2
+	inc bh
+	inc si
+	jmp m1	
+	m2:
+	mov ah,bh
+ret
+
+f5:
+	m3:
+	mov ah, byte[si]
+	cmp ah,0
+	jz m4
+	inc si
+	jmp m3	
+	m4:
+	mov cl, byte[si]
+	mov byte[si+1], cl
+	mov byte[si], bl
+ret
+
+f6:
+	mov dx,0
+	m5:
+	mov ah, byte[si]
+	cmp ah,0
+	jz m6
+	inc dh
+	inc si
+	jmp m5	
+	m6:
+	cmp dh, 32
+	jz m7
+	mov cl, byte[si]
+	mov byte[si+1], cl
+	mov byte[si], bl
+	m7:
+ret
+
+f7:
+	mov dx,0
+	m8:
+	mov ah, byte[si]
+	cmp ah,0
+	jz m9
+	inc dx
+	inc si
+	jmp m8	
+	m9:
+	cmp dx, 32
+	jz m10
+	mov cl, byte[si+1]
+	mov byte [si+2], cl
+	mov cx, dx
+	zamena:
+	mov dh, byte[si]
+	mov byte[si+1], dh
+	dec si
+	loop zamena
+	mov byte[si], bl
+	m10:
+	
+	
+	
+ret
+
+f8:
+	mov dx,0
+	m81:
+	mov ah, byte[si]
+	cmp ah,0
+	jz m91
+	inc dx
+	inc si
+	jmp m81	
+	m91:
+	cmp dx, 31
+	jz m101	
+	cmp si, cx
+	jz m78
+	mov ah, byte[si+1]
+	mov byte [si+2], ah
+	zamena54:
+	mov dh, byte[si]
+	mov byte[si+1], dh
+	dec si
+	cmp si, cx
+	jz m78
+	dec dx
+	cmp dx, 0
+	jnz zamena54
+	m78:
+	mov byte[si], bl
+	m101:
+	
+	
+	
+ret
+;===[ Начало сегмента данных ]==========================================
